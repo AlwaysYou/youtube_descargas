@@ -1,0 +1,30 @@
+{% extends "common/_base.html" %}
+{% load static thumbnail %}
+{% load core_tags app_tags %}
+{% block cssadicional %}
+<link href="{% static 'css/jquery.bxslider.css' %}" rel="stylesheet" />
+
+<link rel="stylesheet" href="{% static 'js/validationform/validationEngine.jquery.css' %}" type="text/css"/>
+{% endblock %}
+
+{% block classbody %}{% endblock %}
+
+{% block content %}
+   <!-- BLOQUE 1 -->
+
+
+
+{% endblock %}
+
+{% block jsfinal %}
+<script type="text/javascript" src="{% static 'js/jquery.bxslider.min.js' %}"></script>
+<script src="{% static 'js/validationform/jquery.validationEngine.js' %}"></script>
+<script src="{% static 'js/validationform/jquery.validationEngine-es.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.waypoints.js' %}"></script>
+<script type="text/javascript">
+	$(function(){
+		
+
+	});
+</script>
+{% endblock %}

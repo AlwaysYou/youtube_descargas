@@ -1,0 +1,233 @@
+{% extends "common/_base.html" %}
+{% load static core_tags app_tags thumbnail %}
+{% block cssadicional %}
+<link rel="stylesheet" href="{% static 'js/validationform/validationEngine.jquery.css' %}" type="text/css"/>
+{% endblock %}
+
+{% block classbody %}{% endblock %}
+
+{% block content %}
+<!-- BLOQUE 6 -->
+<section class="b6" style="background-image: url('{{ banner.imagen.url }}');">
+	<div class="wancho b6-table">
+		<div class="b6-middle">
+			<div class="b6-title">
+				<h1>{{ banner.titulo }}</h1>
+				<div class="b6-text">
+					{{ banner.texto|safe }}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- BLOQUE 12 -->
+<section class="b12">
+	<div class="wancho">
+		<div class="b12-form">
+			<h2>Elije que tipo de cliente eres:</h2>
+			<form method="POST">
+			    {% csrf_token %}
+				<div class="b12-inputradio">
+					<ul>
+						<li>
+							<label>
+								<input class="input-tipo" type="radio" name="tipo" data-input="Nombre" value="Personas" checked> <span>Personas</span>
+							</label>
+						</li>
+						<li>
+							<label>
+								<input class="input-tipo" type="radio" name="tipo" data-input="Nombre de empresa" value="Empresas"> <span>Empresas</span>
+							</label>
+						</li>
+					</ul>
+				</div>
+				<div class="b12-input">
+					<input type="text" name="nombre" placeholder="Nombre" class="input-name validate[required]">
+				</div>
+				<div class="b12-input">
+					<input type="text" name="email" placeholder="Email" class="validate[required]">
+				</div>
+				<div class="b12-input">
+					<input type="text" name="telefono" placeholder="Teléfono" class="validate[required]">
+				</div>
+				<div class="b12-textarea">
+					<textarea name="mensaje" id="" cols="30" rows="10" placeholder="Mensaje"  class="validate[required]"></textarea>
+				</div>
+				<div class="b12-button">
+					<button class="g-btn turqueza">
+						Enviar
+					</button>
+				</div>
+			</form>
+			<div class="b12-referencia">
+				<div class="b12-item">
+					<i class="icon-direccion"></i>
+					<p>{{ info.direccion_local }}</p>
+				</div>
+				<div class="b12-item">
+					<i class="icon-email"></i>
+					<p><a href="mailto:{{ info.email }}">{{ info.email }}</a></p>
+				</div>
+				<div class="b12-item">
+					<i class="icon-telefono"></i>
+					<p><a href="tel:{{ info.telefono|tel }}">{{ info.telefono }}</a></p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<figure class="b12-img">
+		<img src="{{ info.foto_contactanos.path|thumbnail_by_name:'366x210' }}" width="366" height="210" alt="">
+	</figure>
+</section>
+<!-- BLOQUE 13 -->
+<section class="b13">
+	<div class="b13-cnt-map">
+		<div class="g-btn  b13-abrir"><span>Ver mapa</span></div>
+		<div class="b13-box-map">
+			<div class="b13-map" id="google-maplima"></div>
+			<div class="g-btn b13-cerrar"><span>Cerrar mapa</span></div>
+		</div>
+	</div>
+</section>
+
+{% endblock %}
+
+{% block jsfinal %}
+<script type="text/javascript" src="{% static 'js/validationform/jquery.validationEngine-es.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/validationform/jquery.validationEngine.js' %}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script type="text/javascript">
+	$(function(){
+		$("form").validationEngine('attach', {
+			promptPosition : "topLeft",
+			autoHidePrompt: true,
+			autoHideDelay: 3000,
+			binded: false,
+			scroll: false
+		});
+		$(".b14-send").click(function(e) {
+			//e.preventDefault();
+			$('.b14-formulario').validationEngine('validate');
+		});
+
+		$('.input-tipo').change(function(){
+			if ( $(this).is(':checked') ){
+				name = $(this).attr('data-input');
+				$('.input-name').attr('placeholder', name);
+			}
+		});
+	});
+	//BLOQUE 13
+		   //google map
+		    function initMap() {
+		      var $map = $( '#google-maplima' );
+		      if ( ! $map.length ) return;
+		      var myLatlng = new google.maps.LatLng({{ info.coordenadas }}); // <- Your latitude and longitude
+		      var styles = [
+		        {
+		          "featureType": "water",
+		          "stylers": [
+		          {
+		            "color": "#eee"
+		          },
+		          {
+		            "visibility": "on"
+		          }
+		          ]
+		        },
+		        {
+		          "featureType": "landscape",
+		          "stylers": [
+		          {
+		            "color": "#f2f2f2"
+		          }
+		          ]
+		        },
+		        {
+		          "featureType": "road",
+		          "stylers": [
+		          {
+		            "saturation": -100
+		          },
+		          {
+		            "lightness": 45
+		          }
+		          ]
+		        },
+		        {
+		          "featureType": "road.highway",
+		          "stylers": [
+		          {
+		            "visibility": "simplified"
+		          }
+		          ]
+		        },
+		        {
+		          "featureType": "road.arterial",
+		          "elementType": "labels.icon",
+		          "stylers": [
+		          {
+		            "visibility": "off"
+		          }
+		          ]
+		        },
+		        {
+		          "featureType": "administrative",
+		          "elementType": "labels.text.fill",
+		          "stylers": [
+		          {
+		            "color": "#444444"
+		          }
+		          ]
+		        },
+		        {
+		          "featureType": "transit",
+		          "stylers": [
+		          {
+		            "visibility": "off"
+		          }
+		          ]
+		        },
+		        {
+		          "featureType": "poi",
+		          "stylers": [
+		          {
+		            "visibility": "off"
+		          }
+		          ]
+		        }
+		       ]
+		      var mapOptions = {
+		        zoom             : 15,
+		        center           : myLatlng,
+		        mapTypeControl   : true,
+		        disableDefaultUI : true,
+		        zoomControl      : true,
+		        scrollwheel      : false,
+		        styles           : styles,
+		        draggable        : true
+		      }
+		      var map = new google.maps.Map(document.getElementById('google-maplima'), mapOptions);
+
+		      var marker = new google.maps.Marker({
+		          position: myLatlng,
+		          icon:'{% static "img/contacto-nukleo.png" %}',
+		          map: map
+		      });
+		    }
+		    google.maps.event.addDomListener(window, 'load', initMap),
+
+
+		    // script para mapa responsive
+
+		    $(".b13-abrir").click(function(event) {
+		      $(".b13-box-map").addClass('active');
+		    });
+
+		    $(".b13-cerrar").click(function(event) {
+		      $(".b13-box-map").removeClass('active');
+		    });
+		    // fin de mapa
+</script>
+{% endblock %}
